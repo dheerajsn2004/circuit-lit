@@ -1,0 +1,13 @@
+{
+    "env" :{
+        
+                "MONGO_USER":"user_2",
+                "MONGO_PASSWORD" :"user22",
+                "MONGO_DATABASE" : "execom",
+                "PORT" : 3000,
+                "MONGO_URI" : "mongodb+srv://user_2:user22@cluster0.ye6nx.mongodb.net/execom?retryWrites=true&w=majority&appName=Cluster0"
+
+
+
+    }
+}

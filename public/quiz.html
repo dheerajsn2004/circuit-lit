@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Quiz - CircuLit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+   <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #111827; /* Fallback color */
+        }
+        
+        /* Overlay to improve readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(17, 24, 39, 0.85);
+            z-index: -1;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .option-box {
+            position: relative;
+        }
+        
+        .option-box input:checked + label {
+            border-color: #bef264; /* lime-300 */
+            background-color: rgba(31, 41, 55, 0.8); /* gray-800 with transparency */
+            box-shadow: 0 0 0 1px #bef264;
+        }
+        
+        .option-box label:hover {
+            background-color: rgba(31, 41, 55, 0.8); /* gray-800 with transparency */
+        }
+        
+        /* Main content container */
+        .quiz-container {
+            background-color: rgba(31, 41, 55, 0.8); /* Semi-transparent dark background */
+            backdrop-filter: blur(8px);
+            border-radius: 0.75rem;
+            padding: 2rem;
+        }
+        
+        /* Mobile optimization */
+        @media (max-width: 640px) {
+            body {
+                background-attachment: scroll;
+                padding: 1rem;
+            }
+            
+            .quiz-container {
+                padding: 1rem;
+            }
+            
+            .grid.grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="p-8 bg-gray-900 text-white"> 
+    <!-- Timer Display -->
+    <div class="fixed top-4 right-4 bg-gray-800 text-lime-300 px-4 py-2 rounded-lg shadow-lg z-10">
+        Time Remaining: <span id="timer">20:00</span>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold text-lime-300 mb-6 text-left">CircuLit Quiz</h1>
+        <div id="quiz">
+           <div class="mb-8">
+    <img src="./questions/question 1.png" alt="Question 1" class="w-full max-w-md mx-auto mb-4">
+    
+    <!-- Option Grid Container -->
+    <div class="grid grid-cols-2 gap-4">
+        <!-- Top Row -->
+        <div class="option-box">
+            <input type="radio" id="answer1_a" name="answer1" value="A" class="hidden peer">
+            <label for="answer1_a" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                <span class="font-medium">A)</span> F(A,B,C,D) = CD + A'B'D
+            </label>
+        </div>
+        
+        <div class="option-box">
+            <input type="radio" id="answer1_b" name="answer1" value="B" class="hidden peer">
+            <label for="answer1_b" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                <span class="font-medium">B)</span> F(A,B,C,D) = AB'D + ACD + BCD
+            </label>
+        </div>
+        
+        <!-- Bottom Row -->
+        <div class="option-box">
+            <input type="radio" id="answer1_c" name="answer1" value="C" class="hidden peer">
+            <label for="answer1_c" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                <span class="font-medium">C)</span> F(A,B,C,D) = A'B'D' + A'CD + BCD
+            </label>
+        </div>
+        
+        <div class="option-box">
+            <input type="radio" id="answer1_d" name="answer1" value="D" class="hidden peer">
+            <label for="answer1_d" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                <span class="font-medium">D)</span> F(A,B,C,D) = A'B'D + ACD' + BCD
+            </label>
+        </div>
+    </div>
+</div>
+             <div class="mb-8">
+        <img src="./questions/question 2.png" alt="Question 2" class="w-full max-w-md mx-auto mb-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="option-box">
+                <input type="radio" id="answer2_a" name="answer2" value="A" class="hidden peer">
+                <label for="answer2_a" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">A)</span> QS' + Q'S
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer2_b" name="answer2" value="B" class="hidden peer">
+                <label for="answer2_b" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">B)</span> Q'S' + QS
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer2_c" name="answer2" value="C" class="hidden peer">
+                <label for="answer2_c" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">C)</span> Q'R'S' + Q'RS' + QR'S + QRS
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer2_d" name="answer2" value="D" class="hidden peer">
+                <label for="answer2_d" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">D)</span> 011011₂
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="mb-8">
+        <img src="./questions/question 3.png" alt="Question 3" class="w-full max-w-md mx-auto mb-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="option-box">
+                <input type="radio" id="answer3_a" name="answer3" value="A" class="hidden peer">
+                <label for="answer3_a" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">A)</span> 2-input AND gate
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer3_b" name="answer3" value="B" class="hidden peer">
+                <label for="answer3_b" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">B)</span> 2-input OR gate
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer3_c" name="answer3" value="C" class="hidden peer">
+                <label for="answer3_c" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">C)</span> 2-input NAND gate
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer3_d" name="answer3" value="D" class="hidden peer">
+                <label for="answer3_d" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">D)</span> 2-input NOR gate
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question 4 -->
+    <div class="mb-8">
+        <img src="./questions/question 4.png" alt="Question 4" class="w-full max-w-md mx-auto mb-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="option-box">
+                <input type="radio" id="answer4_a" name="answer4" value="A" class="hidden peer">
+                <label for="answer4_a" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">A)</span> 1010
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer4_b" name="answer4" value="B" class="hidden peer">
+                <label for="answer4_b" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">B)</span> 1100
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer4_c" name="answer4" value="C" class="hidden peer">
+                <label for="answer4_c" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">C)</span> 1001
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer4_d" name="answer4" value="D" class="hidden peer">
+                <label for="answer4_d" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">D)</span> 1110
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="mb-8">
+        <img src="./questions/question 5.png" alt="Question 5" class="w-full max-w-md mx-auto mb-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="option-box">
+                <input type="radio" id="answer5_a" name="answer5" value="A" class="hidden peer">
+                <label for="answer5_a" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">A)</span> 3
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer5_b" name="answer5" value="B" class="hidden peer">
+                <label for="answer5_b" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">B)</span> 4
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer5_c" name="answer5" value="C" class="hidden peer">
+                <label for="answer5_c" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">C)</span> 5
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer5_d" name="answer5" value="D" class="hidden peer">
+                <label for="answer5_d" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">D)</span> 6
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+        <button id="submitButton" onclick="askToSubmitQuiz()" class="w-full bg-lime-300 text-gray-900 p-2 rounded-lg hover:bg-lime-500">Submit Answers</button>
+    </div>
+
+    <!-- Confirmation Popup -->
+    <div id="confirmation" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 text-white rounded-lg p-6 max-w-sm w-full shadow-lg">
+            <h2 class="text-xl font-bold mb-4">Are you sure you want to submit?</h2>
+            <div class="flex justify-end space-x-4">
+                <button onclick="hidePopup()" class="px-4 py-2 bg-gray-300 rounded text-gray-800 hover:bg-gray-400">Cancel</button>
+                <button onclick="submitQuiz()" class="px-4 py-2 bg-lime-300 rounded text-gray-800 hover:bg-lime-400">Yes, Submit!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Timer functionality
+        let timerInterval;
+        const totalTime = 1200; // 20 minutes in seconds
+        let timeRemaining = totalTime;
+
+        // Format time as MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update the timer display
+        function updateTimerDisplay() {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = formatTime(timeRemaining);
+            
+            if (timeRemaining <= 300) {
+                timerElement.classList.remove('text-lime-300');
+                timerElement.classList.add('text-red-500');
+            } else {
+                timerElement.classList.remove('text-red-500');
+                timerElement.classList.add('text-lime-300');
+            }
+        }
+
+        // Sync with server
+        async function syncWithServer() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) return;
+
+            try {
+                const response = await fetch(`/quiz-time/${userId}`);
+                const result = await response.json();
+                
+                if (response.ok) {
+                    if (result.quizCompleted) {
+                        clearInterval(timerInterval);
+                        timeRemaining = 0;
+                        updateTimerDisplay();
+                        document.getElementById('submitButton').disabled = true;
+                        document.getElementById('submitButton').classList.add('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+                    
+                    timeRemaining = result.timeRemaining;
+                    updateTimerDisplay();
+                }
+            } catch (error) {
+                console.error('Error syncing timer:', error);
+            }
+        }
+
+        // Start the countdown
+        function startCountdown() {
+            updateTimerDisplay();
+            timerInterval = setInterval(async () => {
+                timeRemaining = Math.max(0, timeRemaining - 1);
+                updateTimerDisplay();
+                
+                // Sync with server every 10 seconds
+                if (timeRemaining % 10 === 0) {
+                    await syncWithServer();
+                }
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    timeExpired();
+                }
+            }, 1000);
+        }
+
+        // Handle time expiration
+        async function timeExpired() {
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true;
+            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            const answers = {
+              answer1: document.querySelector('input[name="answer1"]:checked')?.value || '',
+    answer2: document.querySelector('input[name="answer2"]:checked')?.value || '',
+    answer3: document.querySelector('input[name="answer3"]:checked')?.value || '',
+    answer4: document.querySelector('input[name="answer4"]:checked')?.value || '',
+    answer5: document.querySelector('input[name="answer5"]:checked')?.value || ''
+            };
+            
+            const userId = localStorage.getItem('userId');
+            
+            try {
+                const response = await fetch('/submit-quiz', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, answers })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showSuccessMessage(result);
+                } else {
+                    alert(result.message || "Time expired but submission failed");
+                }
+            } catch (error) {
+                console.error('Error submitting quiz:', error);
+            }
+        }
+
+        // Show success message
+        function showSuccessMessage(result) {
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('confirmation').classList.add('hidden');
+            
+            const successMessage = document.createElement('div');
+            successMessage.className = 'bg-green-500 text-white p-4 rounded-lg mb-4 text-center fade-in';
+            successMessage.innerHTML = `
+                <h3 class="font-bold text-xl">${result.message}</h3>
+                <p>You will be redirected shortly...</p>
+            `;
+            
+            document.querySelector('.max-w-4xl').appendChild(successMessage);
+            document.querySelector('.fixed.top-4.right-4').style.display = 'none';
+            
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 3000);
+        }
+
+        // Initialize and start the timer
+        async function initializeTimer() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) return;
+
+            try {
+                const response = await fetch(`/quiz-time/${userId}`);
+                const result = await response.json();
+                
+                if (response.ok) {
+                    if (result.quizCompleted) {
+                        timeRemaining = 0;
+                        updateTimerDisplay();
+                        document.getElementById('submitButton').disabled = true;
+                        document.getElementById('submitButton').classList.add('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+                    
+                    timeRemaining = result.timeRemaining;
+                    updateTimerDisplay();
+                    
+                    if (timeRemaining === totalTime) {
+                        await fetch('/start-quiz-timer', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId })
+                        });
+                    }
+                    
+                    if (timeRemaining > 0) {
+                        startCountdown();
+                    } else {
+                        timeExpired();
+                    }
+                }
+            } catch (error) {
+                console.error('Error initializing timer:', error);
+                timeRemaining = totalTime;
+                startCountdown();
+            }
+        }
+
+        // Show confirmation popup
+        function askToSubmitQuiz() {
+            console.log("Submit button clicked");
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                alert("Please login first");
+                return;
+            }
+            document.getElementById("confirmation").classList.remove("hidden");
+        }
+
+        // Hide confirmation popup
+        function hidePopup() {
+            document.getElementById("confirmation").classList.add("hidden");
+        }
+
+        // Submit quiz function
+        async function submitQuiz() {
+    console.log("Submitting quiz...");
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;
+    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+    
+    try {
+        // Stop the timer
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+
+        // Correct way to collect all answers
+        const answers = {};
+        for (let i = 1; i <= 5; i++) {
+            const selected = document.querySelector(`input[name="answer${i}"]:checked`);
+            answers[`answer${i}`] = selected ? selected.value : '';
+        }
+
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            throw new Error("No user ID found");
+        }
+
+        // Submit to server
+        const response = await fetch('/submit-quiz', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, answers })
+        });
+        
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Failed to submit quiz');
+        }
+
+        // Show success message
+        showSuccessMessage(result);
+    } catch (error) {
+        console.error("Submission error:", error);
+        alert("Error: " + error.message);
+        submitButton.disabled = false;
+        submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+}
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', initializeTimer);
+    </script>
+</body>
+</html>

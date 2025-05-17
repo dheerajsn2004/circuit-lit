@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CircuLit</title>
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          background-image: url('./images/background.png'); 
+          background-size: cover; 
+          background-repeat: no-repeat;
+          background-position: center;
+          height: 100vh;
+          font-family: sans-serif;
+        }
+        /* @media (max-width: 600px) {
+          body {
+          margin: 0;
+          padding: 0;
+          background-image: url('./images/image1Rotated.png'); 
+          background-size: cover; 
+          background-repeat: no-repeat;
+          background-position: center;
+          height: 100vh;
+          font-family: sans-serif;
+          }
+        } */
+      </style>
+   <link href="/css/tailwind.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-tr p-8 rounded-lg shadow-lg w-full max-w-md">
+        <!-- <h2 class="text-2xl font-bold text-sky-600 mb-6 text-center">Login</h2> -->
+        <div class="mb-4">
+            <label class="block text-white mb-2" for="email"></label>
+            <input type="email" id="email" class="w-full p-2 border rounded-lg" placeholder="E-mail" required>
+        </div>
+        <div class="mb-6">
+            <label class="block text-sky-400 mb-2" for="password"></label>
+            <input type="password" id="password" class="w-full p-2 border rounded-lg" placeholder="Password" required>
+        </div>
+        <button onclick="login()" class="w-full bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700">Login</button>
+        <p class="mt-4 text-center text-white">Don't have an account? <a href="/create-account" class="text-indigo-600 hover:underline">Create one</a></p>
+    </div>
+    <div id="toast" class="hidden fixed top-5 right-5 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity duration-300">
+        <span id="toast-message"></span>
+    </div>
+    <script>
+        function showToast(message,type='error',duration) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-message');
+        toastMsg.textContent = message;
+        toast.className = `fixed top-5 right-5 px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity duration-300 text-white ${
+        type === 'success' ? 'bg-green-600' : 'bg-red-600'
+}`;
+        }
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                localStorage.setItem('userId', result.userId);
+                window.location.href = '/quiz';
+            } else {
+                showToast(result.message);
+            }
+        }
+    </script>
+</body>
+</html>
