@@ -165,32 +165,46 @@ exports.submitQuiz = async (req, res) => {
 
         // Process answers
         const CORRECT_ANSWERS = {
-            answer1: "D",
-            answer2: "B", 
-            answer3: "C",
-            answer4: "A",
-            answer5: "D"
-        };
+    answer1: "D",
+    answer2: "B", 
+    answer3: "C",
+    answer4: "A",
+    answer5: "D",
+    answer6: "C",  // New correct answer for Q6
+    answer7: "B",  // New correct answer for Q7
+    answer8: "101101"  // Expected text answer for Q8
+};
 
-        let score = 0;
-        const questionResults = [];
-        const submittedAnswers = {};
+       let score = 0;
+const questionResults = [];
+const submittedAnswers = {};
 
-        for (let i = 1; i <= 5; i++) {
-            const answerKey = `answer${i}`;
-            const userAnswer = answers[answerKey] || '';
-            const isCorrect = userAnswer === CORRECT_ANSWERS[answerKey];
-            
-            if (isCorrect) score += 20;
-            
-            submittedAnswers[answerKey] = userAnswer;
-            questionResults.push({
-                questionNumber: i,
-                userAnswer,
-                correctAnswer: CORRECT_ANSWERS[answerKey],
-                isCorrect
-            });
-        }
+for (let i = 1; i <= 7; i++) { // For MCQ questions
+    const answerKey = `answer${i}`;
+    const userAnswer = answers[answerKey] || '';
+    const isCorrect = userAnswer === CORRECT_ANSWERS[answerKey];
+    
+    if (isCorrect) score += 10; // Reduced points per question since we have more now
+    
+    submittedAnswers[answerKey] = userAnswer;
+    questionResults.push({
+        questionNumber: i,
+        userAnswer,
+        correctAnswer: CORRECT_ANSWERS[answerKey],
+        isCorrect
+    });
+}
+const textAnswer = answers.answer8 || '';
+const isTextCorrect = textAnswer.trim() === CORRECT_ANSWERS.answer8;
+if (isTextCorrect) score += 10;
+
+submittedAnswers.answer8 = textAnswer;
+questionResults.push({
+    questionNumber: 8,
+    userAnswer: textAnswer,
+    correctAnswer: CORRECT_ANSWERS.answer8,
+    isCorrect: isTextCorrect
+});
 
         // Update user
         user.score = score;

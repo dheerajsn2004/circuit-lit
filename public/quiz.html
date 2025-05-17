@@ -242,6 +242,79 @@
             </div>
         </div>
     </div>
+
+    <!-- Question 6 -->
+    <div class="mb-8">
+        <img src="./questions/question 6.png" alt="Question 6" class="w-full max-w-md mx-auto mb-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="option-box">
+                <input type="radio" id="answer6_a" name="answer6" value="A" class="hidden peer">
+                <label for="answer6_a" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">A)</span> 4
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer6_b" name="answer6" value="B" class="hidden peer">
+                <label for="answer6_b" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">B)</span> 5
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer6_c" name="answer6" value="C" class="hidden peer">
+                <label for="answer6_c" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">C)</span> 6
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer6_d" name="answer6" value="D" class="hidden peer">
+                <label for="answer6_d" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">D)</span> 7
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question 7 -->
+    <div class="mb-8">
+        <img src="./questions/question 7.png" alt="Question 7" class="w-full max-w-md mx-auto mb-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="option-box">
+                <input type="radio" id="answer7_a" name="answer7" value="A" class="hidden peer">
+                <label for="answer7_a" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">A)</span> 3
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer7_b" name="answer7" value="B" class="hidden peer">
+                <label for="answer7_b" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">B)</span> 4
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer7_c" name="answer7" value="C" class="hidden peer">
+                <label for="answer7_c" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">C)</span> 5
+                </label>
+            </div>
+            <div class="option-box">
+                <input type="radio" id="answer7_d" name="answer7" value="D" class="hidden peer">
+                <label for="answer7_d" class="block p-4 border-2 border-gray-700 rounded-lg cursor-pointer hover:bg-gray-800 peer-checked:border-lime-300 peer-checked:bg-gray-800 transition-all">
+                    <span class="font-medium">D)</span> 6
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question 8 (Text Input) -->
+    <div class="mb-8">
+        <img src="./questions/question 8.png" alt="Question 8" class="w-full max-w-md mx-auto mb-4">
+        <div class="mt-4">
+            <label for="answer8" class="block text-sm font-medium mb-2">Your answer:</label>
+            <input type="text" id="answer8" name="answer8" 
+                   class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-lime-300 focus:border-lime-300"
+                   placeholder="Enter your answer here...">
+        </div>
+    </div>
 </div>
         <button id="submitButton" onclick="askToSubmitQuiz()" class="w-full bg-lime-300 text-gray-900 p-2 rounded-lg hover:bg-lime-500">Submit Answers</button>
     </div>
@@ -337,11 +410,14 @@
             submitButton.classList.add('opacity-50', 'cursor-not-allowed');
             
             const answers = {
-              answer1: document.querySelector('input[name="answer1"]:checked')?.value || '',
-    answer2: document.querySelector('input[name="answer2"]:checked')?.value || '',
-    answer3: document.querySelector('input[name="answer3"]:checked')?.value || '',
-    answer4: document.querySelector('input[name="answer4"]:checked')?.value || '',
-    answer5: document.querySelector('input[name="answer5"]:checked')?.value || ''
+                answer1: document.querySelector('input[name="answer1"]:checked')?.value || '',
+                answer2: document.querySelector('input[name="answer2"]:checked')?.value || '',
+                answer3: document.querySelector('input[name="answer3"]:checked')?.value || '',
+                answer4: document.querySelector('input[name="answer4"]:checked')?.value || '',
+                answer5: document.querySelector('input[name="answer5"]:checked')?.value || '',
+                answer6: document.querySelector('input[name="answer6"]:checked')?.value || '',
+                answer7: document.querySelector('input[name="answer7"]:checked')?.value || '',
+                answer8: document.getElementById('answer8')?.value || ''
             };
             
             const userId = localStorage.getItem('userId');
@@ -446,51 +522,57 @@
 
         // Submit quiz function
         async function submitQuiz() {
-    console.log("Submitting quiz...");
-    const submitButton = document.getElementById('submitButton');
-    submitButton.disabled = true;
-    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-    
-    try {
-        // Stop the timer
-        if (timerInterval) {
-            clearInterval(timerInterval);
+            console.log("Submitting quiz...");
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true;
+            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            try {
+                // Stop the timer
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+
+                // Collect all answers
+                const answers = {
+                    answer1: document.querySelector('input[name="answer1"]:checked')?.value || '',
+                    answer2: document.querySelector('input[name="answer2"]:checked')?.value || '',
+                    answer3: document.querySelector('input[name="answer3"]:checked')?.value || '',
+                    answer4: document.querySelector('input[name="answer4"]:checked')?.value || '',
+                    answer5: document.querySelector('input[name="answer5"]:checked')?.value || '',
+                    answer6: document.querySelector('input[name="answer6"]:checked')?.value || '',
+                    answer7: document.querySelector('input[name="answer7"]:checked')?.value || '',
+                    answer8: document.getElementById('answer8')?.value || ''
+                };
+
+                const userId = localStorage.getItem('userId');
+                if (!userId) {
+                    throw new Error("No user ID found");
+                }
+
+                // Submit to server
+                const response = await fetch('/submit-quiz', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, answers })
+                });
+                
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || 'Failed to submit quiz');
+                }
+
+                // Show success message
+                showSuccessMessage(result);
+            } catch (error) {
+                console.error("Submission error:", error);
+                alert("Error: " + error.message);
+                submitButton.disabled = false;
+                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
         }
 
-        // Correct way to collect all answers
-        const answers = {};
-        for (let i = 1; i <= 5; i++) {
-            const selected = document.querySelector(`input[name="answer${i}"]:checked`);
-            answers[`answer${i}`] = selected ? selected.value : '';
-        }
-
-        const userId = localStorage.getItem('userId');
-        if (!userId) {
-            throw new Error("No user ID found");
-        }
-
-        // Submit to server
-        const response = await fetch('/submit-quiz', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, answers })
-        });
-        
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-            throw new Error(result.message || 'Failed to submit quiz');
-        }
-
-        // Show success message
-        showSuccessMessage(result);
-    } catch (error) {
-        console.error("Submission error:", error);
-        alert("Error: " + error.message);
-        submitButton.disabled = false;
-        submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
-    }
-}
         // Initialize the page
         document.addEventListener('DOMContentLoaded', initializeTimer);
     </script>
