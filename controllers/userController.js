@@ -184,7 +184,7 @@ for (let i = 1; i <= 7; i++) { // For MCQ questions
     const userAnswer = answers[answerKey] || '';
     const isCorrect = userAnswer === CORRECT_ANSWERS[answerKey];
     
-    if (isCorrect) score += 10; // Reduced points per question since we have more now
+    if (isCorrect) score += 3; // Reduced points per question since we have more now
     
     submittedAnswers[answerKey] = userAnswer;
     questionResults.push({
@@ -196,7 +196,7 @@ for (let i = 1; i <= 7; i++) { // For MCQ questions
 }
 const textAnswer = answers.answer8 || '';
 const isTextCorrect = textAnswer.trim() === CORRECT_ANSWERS.answer8;
-if (isTextCorrect) score += 10;
+if (isTextCorrect) score += 3;
 
 submittedAnswers.answer8 = textAnswer;
 questionResults.push({
@@ -218,14 +218,14 @@ questionResults.push({
         
         await user.save();
 
-        res.json({ 
-            success: true,
-            message: 'Quiz submitted successfully!',
-            score,
-            totalQuestions: 5,
-            correctAnswers: score / 20,
-            questionResults
-        });
+       res.json({ 
+    success: true,
+    message: 'Quiz submitted successfully!',
+    score,
+    totalQuestions: 8,  // Updated to reflect actual number of questions
+    correctAnswers: Math.round(score / 3),  // Since each correct answer gives 3 points
+    questionResults
+});
     } catch (error) {
         res.status(500).json({ 
             success: false,
