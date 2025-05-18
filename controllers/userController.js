@@ -145,7 +145,7 @@ exports.getQuizTime = async (req, res) => {
 
 exports.submitQuiz = async (req, res) => {
     try {
-        const { userId, answers } = req.body;
+        const { userId, answers = {} } = req.body;
         const user = await User.findById(userId);
         
         if (!user) {
@@ -183,7 +183,7 @@ exports.submitQuiz = async (req, res) => {
         for (let i = 1; i <= 6; i++) {
             const answerKey = `answer${i}`;
             const userAnswer = answers[answerKey] || '';
-            const isCorrect = userAnswer === CORRECT_ANSWERS[answerKey];
+            const isCorrect = userAnswer && userAnswer === CORRECT_ANSWERS[answerKey];
             
             if (isCorrect) score += 3;
             
@@ -192,18 +192,18 @@ exports.submitQuiz = async (req, res) => {
                 questionNumber: i,
                 userAnswer,
                 correctAnswer: CORRECT_ANSWERS[answerKey],
-                isCorrect
+                isCorrect: !!isCorrect
             });
         }
 
         // Process text answer (question 7)
         const answer7 = (answers.answer7 || '').toLowerCase().trim();
         const normalizedAnswer7 = answer7
-            .replace(/\s+/g, ' ')    // collapse multiple spaces
-            .replace(/\D/g, '')      // remove non-digit characters
-            .replace(/^0+/, '');     // remove leading zeros
+            .replace(/\s+/g, ' ')
+            .replace(/\D/g, '')
+            .replace(/^0+/, '');
         
-        const isAnswer7Correct = CORRECT_ANSWERS.answer7.some(correctAnswer => 
+        const isAnswer7Correct = answer7 && CORRECT_ANSWERS.answer7.some(correctAnswer => 
             normalizedAnswer7 === correctAnswer.replace(/\D/g, '') || 
             answer7.includes(correctAnswer)
         );
@@ -215,20 +215,32 @@ exports.submitQuiz = async (req, res) => {
             questionNumber: 7,
             userAnswer: answer7,
             correctAnswer: "0110",
-            isCorrect: isAnswer7Correct
+            isCorrect: !!isAnswer7Correct
         });
 
-        // Process text answer (question 8)
+        // Process text answer (question 8) with stricter validation
         const answer8 = (answers.answer8 || '').toLowerCase().trim();
         const normalizedAnswer8 = answer8
-            .replace(/-/g, ' ')      // replace hyphens with spaces
-            .replace(/\s+/g, ' ')    // collapse multiple spaces
+            .replace(/-/g, ' ')
+            .replace(/\s+/g, ' ')
             .trim();
         
-        const isAnswer8Correct = CORRECT_ANSWERS.answer8.some(correctAnswer => 
-            normalizedAnswer8.includes(correctAnswer) || 
-            correctAnswer.includes(normalizedAnswer8)
-        );
+        // More strict matching for question 8
+        const isAnswer8Correct = answer8 && CORRECT_ANSWERS.answer8.some(correctAnswer => {
+            // Split both answers into words
+            const userWords = normalizedAnswer8.split(/\s+/);
+            const correctWords = correctAnswer.split(/\s+/);
+            
+            // At least 3 words must match (for "3 bit xor gate") or 2 words (for "odd parity")
+            const minWordsToMatch = correctWords.length >= 3 ? 3 : 2;
+            
+            // Count how many words match
+            const matchingWords = userWords.filter(word => 
+                correctWords.some(correctWord => correctWord.includes(word) || word.includes(correctWord))
+            ).length;
+            
+            return matchingWords >= minWordsToMatch;
+        });
 
         if (isAnswer8Correct) score += 3;
 
@@ -237,7 +249,7 @@ exports.submitQuiz = async (req, res) => {
             questionNumber: 8,
             userAnswer: answer8,
             correctAnswer: "3 bit XOR gate or Odd Parity gate",
-            isCorrect: isAnswer8Correct
+            isCorrect: !!isAnswer8Correct
         });
 
         // Update user

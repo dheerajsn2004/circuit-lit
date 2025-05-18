@@ -388,43 +388,58 @@
         }
 
         // Handle time expiration
-        async function timeExpired() {
-            const submitButton = document.getElementById('submitButton');
-            submitButton.disabled = true;
-            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-            
-            const answers = {
-                answer1: document.querySelector('input[name="answer1"]:checked')?.value || '',
-                answer2: document.querySelector('input[name="answer2"]:checked')?.value || '',
-                answer3: document.querySelector('input[name="answer3"]:checked')?.value || '',
-                answer4: document.querySelector('input[name="answer4"]:checked')?.value || '',
-                answer5: document.querySelector('input[name="answer5"]:checked')?.value || '',
-                answer6: document.querySelector('input[name="answer6"]:checked')?.value || '',
-                answer7: document.getElementById('answer7')?.value || '',
-                answer8: document.getElementById('answer8')?.value || ''
-            };
-            
-            const userId = localStorage.getItem('userId');
-            
-            try {
-                const response = await fetch('/submit-quiz', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId, answers })
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok && result.success) {
-                    showSuccessMessage(result);
-                } else {
-                    alert(result.message || "Time expired but submission failed");
-                }
-            } catch (error) {
-                console.error('Error submitting quiz:', error);
-            }
+        // Handle time expiration
+async function timeExpired() {
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;
+    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+    
+    // Initialize all answers as empty
+    const answers = {
+        answer1: '',
+        answer2: '',
+        answer3: '',
+        answer4: '',
+        answer5: '',
+        answer6: '',
+        answer7: '',
+        answer8: ''
+    };
+    
+    // Only include answers that were actually selected/entered
+    for (let i = 1; i <= 6; i++) {
+        const selected = document.querySelector(`input[name="answer${i}"]:checked`);
+        if (selected) {
+            answers[`answer${i}`] = selected.value;
         }
-
+    }
+    
+    // Get text answers if they exist
+    const answer7 = document.getElementById('answer7')?.value || '';
+    const answer8 = document.getElementById('answer8')?.value || '';
+    answers.answer7 = answer7;
+    answers.answer8 = answer8;
+    
+    const userId = localStorage.getItem('userId');
+    
+    try {
+        const response = await fetch('/submit-quiz', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, answers })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            showSuccessMessage(result);
+        } else {
+            alert(result.message || "Time expired but submission failed");
+        }
+    } catch (error) {
+        console.error('Error submitting quiz:', error);
+    }
+}
         // Show success message
         function showSuccessMessage(result) {
             document.getElementById('quiz').style.display = 'none';
