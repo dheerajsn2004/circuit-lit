@@ -165,46 +165,80 @@ exports.submitQuiz = async (req, res) => {
 
         // Process answers
         const CORRECT_ANSWERS = {
-    answer1: "D",
-    answer2: "B", 
-    answer3: "C",
-    answer4: "A",
-    answer5: "D",
-    answer6: "C",  // New correct answer for Q6
-    answer7: "B",  // New correct answer for Q7
-    answer8: "101101"  // Expected text answer for Q8
-};
+            answer1: "C",
+            answer2: "A", 
+            answer3: "D",
+            answer4: "B",
+            answer5: "D",
+            answer6: "A",
+            answer7: ["0110", "110", "0110 binary", "binary 0110"],
+            answer8: ["3 bit xor gate", "odd parity gate", "3-bit xor gate", "xor gate", "3 bit xor", "odd parity"]
+        };
 
-       let score = 0;
-const questionResults = [];
-const submittedAnswers = {};
+        let score = 0;
+        const questionResults = [];
+        const submittedAnswers = {};
 
-for (let i = 1; i <= 7; i++) { // For MCQ questions
-    const answerKey = `answer${i}`;
-    const userAnswer = answers[answerKey] || '';
-    const isCorrect = userAnswer === CORRECT_ANSWERS[answerKey];
-    
-    if (isCorrect) score += 3; // Reduced points per question since we have more now
-    
-    submittedAnswers[answerKey] = userAnswer;
-    questionResults.push({
-        questionNumber: i,
-        userAnswer,
-        correctAnswer: CORRECT_ANSWERS[answerKey],
-        isCorrect
-    });
-}
-const textAnswer = answers.answer8 || '';
-const isTextCorrect = textAnswer.trim() === CORRECT_ANSWERS.answer8;
-if (isTextCorrect) score += 3;
+        // Process MCQ questions (1-6)
+        for (let i = 1; i <= 6; i++) {
+            const answerKey = `answer${i}`;
+            const userAnswer = answers[answerKey] || '';
+            const isCorrect = userAnswer === CORRECT_ANSWERS[answerKey];
+            
+            if (isCorrect) score += 3;
+            
+            submittedAnswers[answerKey] = userAnswer;
+            questionResults.push({
+                questionNumber: i,
+                userAnswer,
+                correctAnswer: CORRECT_ANSWERS[answerKey],
+                isCorrect
+            });
+        }
 
-submittedAnswers.answer8 = textAnswer;
-questionResults.push({
-    questionNumber: 8,
-    userAnswer: textAnswer,
-    correctAnswer: CORRECT_ANSWERS.answer8,
-    isCorrect: isTextCorrect
-});
+        // Process text answer (question 7)
+        const answer7 = (answers.answer7 || '').toLowerCase().trim();
+        const normalizedAnswer7 = answer7
+            .replace(/\s+/g, ' ')    // collapse multiple spaces
+            .replace(/\D/g, '')      // remove non-digit characters
+            .replace(/^0+/, '');     // remove leading zeros
+        
+        const isAnswer7Correct = CORRECT_ANSWERS.answer7.some(correctAnswer => 
+            normalizedAnswer7 === correctAnswer.replace(/\D/g, '') || 
+            answer7.includes(correctAnswer)
+        );
+
+        if (isAnswer7Correct) score += 3;
+
+        submittedAnswers.answer7 = answer7;
+        questionResults.push({
+            questionNumber: 7,
+            userAnswer: answer7,
+            correctAnswer: "0110",
+            isCorrect: isAnswer7Correct
+        });
+
+        // Process text answer (question 8)
+        const answer8 = (answers.answer8 || '').toLowerCase().trim();
+        const normalizedAnswer8 = answer8
+            .replace(/-/g, ' ')      // replace hyphens with spaces
+            .replace(/\s+/g, ' ')    // collapse multiple spaces
+            .trim();
+        
+        const isAnswer8Correct = CORRECT_ANSWERS.answer8.some(correctAnswer => 
+            normalizedAnswer8.includes(correctAnswer) || 
+            correctAnswer.includes(normalizedAnswer8)
+        );
+
+        if (isAnswer8Correct) score += 3;
+
+        submittedAnswers.answer8 = answer8;
+        questionResults.push({
+            questionNumber: 8,
+            userAnswer: answer8,
+            correctAnswer: "3 bit XOR gate or Odd Parity gate",
+            isCorrect: isAnswer8Correct
+        });
 
         // Update user
         user.score = score;
@@ -218,14 +252,14 @@ questionResults.push({
         
         await user.save();
 
-       res.json({ 
-    success: true,
-    message: 'Quiz submitted successfully!',
-    score,
-    totalQuestions: 8,  // Updated to reflect actual number of questions
-    correctAnswers: Math.round(score / 3),  // Since each correct answer gives 3 points
-    questionResults
-});
+        res.json({ 
+            success: true,
+            message: 'Quiz submitted successfully!',
+            score,
+            totalQuestions: 8,
+            correctAnswers: Math.round(score / 3),
+            questionResults
+        });
     } catch (error) {
         res.status(500).json({ 
             success: false,
